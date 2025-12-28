@@ -91,7 +91,7 @@ const CandlestickChart = ({
         candleSeriesRef.current = null;
       };
     });
-  }, [height, period]);
+  }, [height]);
 
   useEffect(() => {
     if (!candleSeriesRef.current) return;
