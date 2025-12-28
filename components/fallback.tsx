@@ -61,3 +61,18 @@ export const TrendingCoinsFallback = () => (
     </div>
   </div>
 );
+
+export const CategoriesFallback = () => {
+  return (
+    <div className="w-full space-y-4">
+      <div className="h-6 bg-gray-300 rounded animate-pulse"></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div key={index} className="h-20 bg-gray-300 rounded animate-pulse"></div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default CategoriesFallback;

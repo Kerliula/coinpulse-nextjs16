@@ -20,7 +20,9 @@ const columns: DataTableColumn<CoinData>[] = [
   {
     header: 'Name',
     cellClassName: 'name-cell',
-    cell: (coin: CoinData) => <Link href={`/coins/${coin.id}`}>{coin.name}</Link>,
+    cell: (coin: CoinData) => (
+      <Link href={`/coins/${coin.id}`}>{coin.name}</Link>
+    ),
   },
   {
     header: '24h Change',
@@ -33,7 +35,11 @@ const columns: DataTableColumn<CoinData>[] = [
         <div
           className={cn(
             'price-change flex items-center gap-1',
-            isPositive ? 'text-green-500' : isNeutral ? 'text-gray-500' : 'text-red-500'
+            isPositive
+              ? 'text-green-500'
+              : isNeutral
+                ? 'text-gray-500'
+                : 'text-red-500'
           )}
         >
           {isPositive && <TrendingUp width={16} height={16} />}
@@ -55,7 +61,8 @@ const columns: DataTableColumn<CoinData>[] = [
       } else {
         return `${price.toFixed(2)}`;
       }
-    },  },
+    },
+  },
 ];
 
 const TrendingCoins = async () => {
@@ -63,18 +70,18 @@ const TrendingCoins = async () => {
     const response = await fetcher<{ data: CoinData[] }>(
       '/v1/cryptocurrency/listings/latest',
       undefined,
-      5000 
+      5000
     );
-    
+
     if (!response.data || !Array.isArray(response.data)) {
       throw new Error('Invalid response format');
     }
-    
-    const trendingCoinsData = response.data.slice(0, 6);
-    
+
+    const trendingCoinsData = response.data.slice(0, 10);
+
     return (
       <div id="trending-coins">
-        <h2 className='text-xl text-center font-bold mb-4'>Trending Coins</h2>
+        <h4>Trending Coins</h4>
         <DataTable
           columns={columns}
           data={trendingCoinsData}
@@ -89,8 +96,10 @@ const TrendingCoins = async () => {
     console.error('Failed to fetch trending coins:', error);
     return (
       <div id="trending-coins">
-        <h2 className='text-xl text-center font-bold mb-4'>Trending Coins</h2>
-        <p className='text-center text-gray-500'>Unable to load trending coins at this time.</p>
+        <h2 className="text-xl text-center font-bold mb-4">Trending Coins</h2>
+        <p className="text-center text-gray-500">
+          Unable to load trending coins at this time.
+        </p>
       </div>
     );
   }
