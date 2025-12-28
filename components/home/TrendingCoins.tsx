@@ -2,7 +2,7 @@ import { fetcher } from '@/lib/coinmarketcap.actions';
 import Link from 'next/link';
 import cn from 'clsx';
 import { TrendingDown, TrendingUp } from 'lucide-react';
-import { DataTable, type DataTableColumn } from '@/components/DataTable';
+import { DataTable } from '@/components/DataTable';
 
 interface CoinData {
   id: number;
@@ -20,12 +20,12 @@ const columns: DataTableColumn<CoinData>[] = [
   {
     header: 'Name',
     cellClassName: 'name-cell',
-    cell: (coin) => <Link href={`/coins/${coin.id}`}>{coin.name}</Link>,
+    cell: (coin: CoinData) => <Link href={`/coins/${coin.id}`}>{coin.name}</Link>,
   },
   {
     header: '24h Change',
     cellClassName: 'change-cell',
-    cell: (coin) => {
+    cell: (coin: CoinData) => {
       const change = coin.quote.USD.percent_change_24h;
       const isPositive = change > 0;
       const isNeutral = change === 0;
@@ -46,8 +46,16 @@ const columns: DataTableColumn<CoinData>[] = [
   {
     header: 'Price',
     cellClassName: 'price-cell',
-    cell: (coin) => `$${coin.quote.USD.price.toFixed(2)}`,
-  },
+    cell: (coin: CoinData) => {
+      const price = coin.quote.USD.price;
+      if (price < 0.01) {
+        return `${price.toFixed(6)}`;
+      } else if (price < 1) {
+        return `${price.toFixed(4)}`;
+      } else {
+        return `${price.toFixed(2)}`;
+      }
+    },  },
 ];
 
 const TrendingCoins = async () => {

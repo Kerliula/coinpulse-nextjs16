@@ -1,4 +1,26 @@
-type OHLCData = [number, number, number, number, number];
+/// <reference types="react" />
+
+type OHLCData = {
+  time: Time;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+};
+
+type CoinOHLCDData = (string | number)[][];
+
+interface CoinMarketCapDetailsData {
+  data: Record<string, {
+    name: string;
+    symbol: string;
+    quote: {
+      USD: {
+        price: number;
+      };
+    };
+  }>;
+}
 
 interface NextPageProps {
   params: Promise<{ [key: string]: string }>;
@@ -6,15 +28,15 @@ interface NextPageProps {
 }
 
 interface CandlestickChartProps {
-  data?: OHLCData[];
+  data?: OHLCData[] | (string | number)[][];
   liveOhlcv?: OHLCData | null;
   coinId: string;
   height?: number;
   children?: React.ReactNode;
   mode?: 'historical' | 'live';
   initialPeriod?: Period;
-  liveInterval: '1s' | '1m';
-  setLiveInterval: (interval: '1s' | '1m') => void;
+  liveInterval?: '1s' | '1m';
+  setLiveInterval?: (interval: '1s' | '1m') => void;
 }
 
 interface ConverterProps {
@@ -180,7 +202,7 @@ interface WebSocketMessage {
   identifier?: string;
 }
 
-interface CoinDetailsData {
+interface CoinGeckoDetailsData {
   id: string;
   name: string;
   symbol: string;

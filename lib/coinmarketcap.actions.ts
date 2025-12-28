@@ -4,18 +4,24 @@ import qs from 'query-string';
 
 type QueryParams = Record<string, string | number | boolean | undefined>;
 
-const BASE_URL = process.env.COINMARKETCAP_API_URL;
+const COINMARKETCAP_API_URL = process.env.COINMARKETCAP_API_URL;
+const BINANSE_API_URL = process.env.BINANCE_API_URL;
+
 const API_KEY = process.env.COINMARKETCAP_API_KEY;
 
-if (!BASE_URL || !API_KEY) {
-  throw new Error('CoinMarketCap API URL or API Key is not defined');
+if (!COINMARKETCAP_API_URL || !API_KEY || !BINANSE_API_URL) {
+  throw new Error('API URL or API Key is not defined in environment variables');
 }
 
 export async function fetcher<T>(
   endpoint: string,
   params?: QueryParams,
-  revalidate = 60
+  revalidate = 60,
+  api: 'binance' | 'coinmarketcap' = 'coinmarketcap'
 ): Promise<T> {
+  const BASE_URL =
+    api === 'coinmarketcap' ? COINMARKETCAP_API_URL : BINANSE_API_URL;
+
   const url = qs.stringifyUrl(
     {
       url: `${BASE_URL}${endpoint}`,
@@ -24,12 +30,18 @@ export async function fetcher<T>(
     { skipEmptyString: true, skipNull: true }
   );
 
+  const headers: Record<string, string> = api === 'coinmarketcap'
+    ? {
+        'X-CMC_PRO_API_KEY': API_KEY!,
+        'content-type': 'application/json',
+      }
+    : {
+        'content-type': 'application/json',
+      };
+
   const response = await fetch(url, {
     method: 'GET',
-    headers: {
-      'X-CMC_PRO_API_KEY': API_KEY,
-      'content-type': 'application/json',
-    } as Record<string, string>,
+    headers,
     next: { revalidate },
   });
 
