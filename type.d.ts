@@ -31,6 +31,7 @@ interface CandlestickChartProps {
   data?: OHLCData[] | (string | number)[][];
   liveOhlcv?: OHLCData | null;
   coinId: string;
+  volume?: float;
   height?: number;
   children?: React.ReactNode;
   mode?: 'historical' | 'live';
@@ -167,7 +168,8 @@ interface Trade {
   price?: number;
   timestamp?: number;
   type?: string;
-  amount?: number;
+  quantity?: number;
+  tradeId?: number;
   value?: number;
 }
 
@@ -276,13 +278,13 @@ interface Category {
   volume_24h: number;
 }
 
-interface UseCoinGeckoWebSocketProps {
+interface UseBinanceWebSocketProps {
   coinId: string;
   poolId: string;
   liveInterval?: '1s' | '1m';
 }
 
-interface UseCoinGeckoWebSocketReturn {
+interface UseBinanceWebSocketReturn {
   price: ExtendedPriceData | null;
   trades: Trade[];
   ohlcv: OHLCData | null;
