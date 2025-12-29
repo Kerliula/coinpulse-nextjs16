@@ -38,6 +38,27 @@ export function formatPercentage(change: number | null | undefined): string {
   return `${formattedChange}%`;
 }
 
+export function formatNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '0';
+  }
+  
+  if (value >= 1e9) {
+    return `${(value / 1e9).toFixed(2)}B`;
+  }
+  if (value >= 1e6) {
+    return `${(value / 1e6).toFixed(2)}M`;
+  }
+  if (value >= 1e3) {
+    return `${(value / 1e3).toFixed(2)}K`;
+  }
+  
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 8,
+  });
+}
+
 export function trendingClasses(value: number) {
   const isTrendingUp = value > 0;
 
